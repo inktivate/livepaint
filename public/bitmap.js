@@ -1,19 +1,19 @@
 function Bitmap(width, height) {
     this.grid = [];
-    for(var row = 0; row < height; row++) {
+    for (var row = 0; row < height; row++) {
         var row_arr = new Array(width);
         row_arr.fill("white");
         this.grid.push(row_arr);
     }
 }
 
-Bitmap.prototype.render = function(target_element) {
+Bitmap.prototype.render = function (target_element) {
     this.cells = [];
-    for(var row = 0; row < this.grid.length; row++) {
+    for (var row = 0; row < this.grid.length; row++) {
         var row_div = document.createElement("div");
         var cell_refs = [];
         row_div.className = "bmp_row";
-        for(var col = 0; col < this.grid[row].length; col++) {
+        for (var col = 0; col < this.grid[row].length; col++) {
             var cell = document.createElement("div");
             cell.className = "bmp_cell";
             cell.dataset.row = row;
@@ -28,18 +28,21 @@ Bitmap.prototype.render = function(target_element) {
     }
 };
 
-Bitmap.prototype.setColor = function(row, col, color) {
+Bitmap.prototype.setColor = function (row, col, color) {
     this.grid[row][col] = color;
     this.cells[row][col].style.background = color;
+    clientUpdates.push([row, col, paint_color, Date.now()]);
 }
 
-Bitmap.prototype.handleEvent = function(event) {
-    if(event.type === "click") {
+let clientUpdates = [];
+
+Bitmap.prototype.handleEvent = function (event) {
+    if (event.type === "click") {
         var row = parseInt(event.currentTarget.dataset.row);
         var col = parseInt(event.currentTarget.dataset.col);
-        if(tool === "draw") {
+        if (tool === "draw") {
             this.setColor(row, col, paint_color);
-        } else if(tool == "fill") {
+        } else if (tool == "fill") {
             this.fill(row, col, paint_color);
         }
     }
